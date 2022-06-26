@@ -57,12 +57,14 @@ print(f"This is  {COM/Total_Length} of the way up the rocket.")
 density_CF = 1750 # kg/m3
 Yield_strength_CF = 2500e6 # in Pa
 E_CF = 183e9
+
+# Modelling Parameters
 Thrust = 10e3 # in N
 Bending_Force_Fins = 80e3 # in N
 
 #Assuming encastre at joining
 #Analyse Axial load
-t = 0.0025 # Tank Thickness
+t = 0.002 # Tank Thickness
 CrossArea = 2*np.pi*r*t
 I = np.pi*(r**3)*t
 
@@ -76,7 +78,8 @@ deflection = Bending_Force_Fins*(Total_Length**3)/(3*E_CF*I)
 tank_mass = (CrossArea*(Total_Length) + Area_cylinder*4*t)*density_CF # Assuming 4 plates separate the tanks from one another and that their thickness is the same
 total_mass = total_pressfuel_mass + White_Giant_mass + tank_mass
 
-print(f"Axial stres: {Axial_stress} Pa")
+print(f"Thickness: {t}m")
+print(f"Axial stress: {Axial_stress} Pa")
 print(f"Bending_stress: {Bending_stress} Pa")
 print(f"Yield Strength: {Yield_strength_CF} Pa")
 print(f"Is Yield Strength greater than Axial and Bending Stress: {Yield_strength_CF> Axial_stress and Yield_strength_CF > Bending_stress}")
