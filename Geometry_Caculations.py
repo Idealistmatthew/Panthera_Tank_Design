@@ -41,8 +41,10 @@ White_Giant_COM = White_Giant_length/2
 IPA_COM = White_Giant_length + IPA_Length/2
 NO2_COM = White_Giant_length + IPA_Length + NO2_Length/2
 pressurant_COM = White_Giant_length + IPA_Length + NO2_Length + pressurant_length/2
-COM  = (White_Giant_COM*White_Giant_mass + IPA_COM*m_IPA + NO2_COM/2*m_NO2 + pressurant_COM*m_He/2)/(total_pressfuel_mass + White_Giant_mass)
+COM  = (White_Giant_COM*White_Giant_mass + IPA_COM*m_IPA + NO2_COM*m_NO2 + pressurant_COM*m_He)/(total_pressfuel_mass + White_Giant_mass)
 
 print(f"Length is {Length + 0.9} m.")
+print(f"Lengths IPA : {IPA_Length}, NO2: {NO2_Length}, Pressurant: {pressurant_length}")
+print(f"Masses IPA: {m_IPA}, NO2: {m_NO2}, Pressurant: {m_He}")
 print(f"Center of mass is {COM} m from the bottom of the rocket")
 print(f"This is  {COM/(Length+0.9)} of the way up the rocket.")
