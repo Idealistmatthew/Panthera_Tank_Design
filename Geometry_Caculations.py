@@ -27,6 +27,7 @@ def get_pressurant_details():
     m_pressurant = (pressurant_initial_pressure*V_0)/(R*T_0)
     return [V_0, m_pressurant]
 
+# Length Calculations
 pressurant_volume, m_He = get_pressurant_details()
 total_volume = (pressurant_volume + Total_OxFuel_Volume)*1.15 # 1.15 is a fudge factor for increase in volume due to connectors and etc
 Area_cylinder = (np.pi*(r**2))
@@ -37,14 +38,48 @@ pressurant_length = pressurant_volume/Area_cylinder
 total_pressfuel_mass = m_NO2 + m_IPA + m_He
 White_Giant_length = 0.9
 White_Giant_mass = 3
+Total_Length = Length + White_Giant_length
+
+#COM Calculations
 White_Giant_COM = White_Giant_length/2
 IPA_COM = White_Giant_length + IPA_Length/2
 NO2_COM = White_Giant_length + IPA_Length + NO2_Length/2
 pressurant_COM = White_Giant_length + IPA_Length + NO2_Length + pressurant_length/2
 COM  = (White_Giant_COM*White_Giant_mass + IPA_COM*m_IPA + NO2_COM*m_NO2 + pressurant_COM*m_He)/(total_pressfuel_mass + White_Giant_mass)
 
-print(f"Length is {Length + 0.9} m.")
+print(f"Length is {Total_Length} m.")
 print(f"Lengths IPA : {IPA_Length}, NO2: {NO2_Length}, Pressurant: {pressurant_length}")
 print(f"Masses IPA: {m_IPA}, NO2: {m_NO2}, Pressurant: {m_He}")
 print(f"Center of mass is {COM} m from the bottom of the rocket")
-print(f"This is  {COM/(Length+0.9)} of the way up the rocket.")
+print(f"This is  {COM/Total_Length} of the way up the rocket.")
+
+## Carbon Fibre Parameters
+density_CF = 1750 # kg/m3
+Yield_strength_CF = 2500e6 # in Pa
+E_CF = 183e9
+Thrust = 10e3 # in N
+Bending_Force_Fins = 80e3 # in N
+
+#Assuming encastre at joining
+#Analyse Axial load
+t = 0.0025 # Tank Thickness
+CrossArea = 2*np.pi*r*t
+I = np.pi*(r**3)*t
+
+#Stress and deflection Calculation
+Axial_stress = Thrust/(CrossArea)
+Bending_Moment = Bending_Force_Fins*Total_Length
+Bending_stress = Bending_Moment*r/I
+deflection = Bending_Force_Fins*(Total_Length**3)/(3*E_CF*I)
+
+#Approximate Mass Calculation
+tank_mass = (CrossArea*(Total_Length) + Area_cylinder*4*t)*density_CF # Assuming 4 plates separate the tanks from one another and that their thickness is the same
+total_mass = total_pressfuel_mass + White_Giant_mass + tank_mass
+
+print(f"Axial stres: {Axial_stress} Pa")
+print(f"Bending_stress: {Bending_stress} Pa")
+print(f"Yield Strength: {Yield_strength_CF} Pa")
+print(f"Is Yield Strength greater than Axial and Bending Stress: {Yield_strength_CF> Axial_stress and Yield_strength_CF > Bending_stress}")
+print(f"Deflection: {deflection} m")
+print(f"Approximate tank mass: {tank_mass} kg")
+print(f"Approximate Panthera mass: {total_mass} kg")
